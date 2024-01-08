@@ -1,11 +1,31 @@
-PRODUCT_VERSION_MAJOR = 14
-PRODUCT_VERSION_MINOR = 0
+# REVOLVED-UI Version with each major release.
+REVOLVED_VERSION := 2.0
 
-# Increase CR Version with each major release.
-CR_VERSION := 10.2
+REVOLVED_BUILD_TYPE ?= unofficial
+
+ifeq ($(WITH_GMS), true)
+  REVOLVED_BUILD_VARIANT := gapps
+else
+  REVOLVED_BUILD_VARIANT := vanilla
+endif
+
+ifeq ($(REVOLVED_BUILD_TYPE), official)
+  OFFICIAL_DEVICES = $(shell cat vendor/lineage/revolved.devices)
+  FOUND_DEVICE =  $(filter $(LINEAGE_BUILD), $(OFFICIAL_DEVICES))
+    ifeq ($(FOUND_DEVICE),$(LINEAGE_BUILD))
+      REVOLVED_BUILD_TYPE := official
+    else
+      REVOLVED_BUILD_TYPE := unofficial
+    endif
+endif
+
+PRODUCT_VERSION_MAJOR = ReDefined
 
 # Internal version
-LINEAGE_VERSION := crDroidAndroid-$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date +%Y%m%d)-$(LINEAGE_BUILD)-v$(CR_VERSION)
+LINEAGE_VERSION := Revolved$(REVOLVED_VARIANT)-v$(REVOLVED_VERSION)-$(REVOLVED_BUILD_TYPE)-$(LINEAGE_BUILD)-$(REVOLVED_BUILD_VARIANT)-$(shell date +%Y%m%d)
 
 # Display version
-LINEAGE_DISPLAY_VERSION := crDroidAndroid-$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(LINEAGE_BUILD)-v$(CR_VERSION)
+LINEAGE_DISPLAY_VERSION := Revolved-$(PRODUCT_VERSION_MAJOR)-$(LINEAGE_BUILD)-v$(REVOLVED_VERSION)
+
+# Build info
+REVOLVED_BUILD_INFO := $(LINEAGE_VERSION)

@@ -9,27 +9,6 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.opa.eligible_device=true \
     ro.carriersetup.vzw_consent_page=true
 
-# Setupwizard
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.setupwizard.enterprise_mode=1 \
-    ro.setupwizard.esim_cid_ignore=00000001 \
-    setupwizard.feature.baseline_setupwizard_enabled=true \
-    setupwizard.feature.day_night_mode_enabled=true \
-    setupwizard.feature.lifecycle_refactoring=true \
-    setupwizard.feature.notification_refactoring=true \
-    setupwizard.feature.portal_notification=true \
-    setupwizard.feature.show_pai_screen_in_main_flow.carrier1839=false \
-    setupwizard.feature.show_pixel_tos=true \
-    setupwizard.feature.show_support_link_in_deferred_setup=false \
-    setupwizard.feature.skip_button_use_mobile_data.carrier1839=true \
-    setupwizard.theme=glif_v3_light \
-    setupwizard.feature.enable_wifi_tracker=true
-
-# Disable touch video heatmap to reduce latency, motion jitter, and CPU usage
-# on supported devices with Deep Press input classifier HALs and models
-PRODUCT_PRODUCT_PROPERTIES += \
-    ro.input.video_enabled=false
-
 # Blurs
 ifeq ($(TARGET_ENABLE_BLUR), true)
 PRODUCT_SYSTEM_EXT_PROPERTIES += \
@@ -48,24 +27,23 @@ PRODUCT_COPY_FILES += \
 PRODUCT_SYSTEM_EXT_PROPERTIES += \
     arm64.memtag.process.system_server=off
 
-# Enable dex2oat64 to do dexopt
-PRODUCT_SYSTEM_EXT_PROPERTIES += \
-    dalvik.vm.dex2oat64.enabled=true
-
 # Disable lockscreen live wallpaper for media metadata on lockscreen to work
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     persist.wm.debug.lockscreen_live_wallpaper=false
 
-# Speed profile services and wifi-service to reduce RAM and storage
-PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := speed-profile
-PRODUCT_USE_PROFILE_FOR_BOOT_IMAGE := true
-PRODUCT_DEX_PREOPT_BOOT_IMAGE_PROFILE_LOCATION := frameworks/base/config/boot-image-profile.txt
+# Disable touch video heatmap to reduce latency, motion jitter, and CPU usage
+# on supported devices with Deep Press input classifier HALs and models
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.input.video_enabled=false
+
+# Enable dex2oat64 to do dexopt
+PRODUCT_SYSTEM_EXT_PROPERTIES += \
+    dalvik.vm.dex2oat64.enabled=true
 
 # Extra packages
 PRODUCT_PACKAGES += \
     BatteryStatsViewer \
     GameSpace \
-    MatLog \
     OmniJaws \
     OmniStyle
 
@@ -79,3 +57,29 @@ PRODUCT_SYSTEM_EXT_PROPERTIES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.biometrics.face.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/android.hardware.biometrics.face.xml
 endif
+
+# GApps packages
+ifeq ($(WITH_GMS),true)
+$(call inherit-product, vendor/gms/common/common-vendor.mk)
+endif
+
+# Setupwizard
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.setupwizard.enterprise_mode=1 \
+    ro.setupwizard.esim_cid_ignore=00000001 \
+    setupwizard.feature.baseline_setupwizard_enabled=true \
+    setupwizard.feature.day_night_mode_enabled=true \
+    setupwizard.feature.lifecycle_refactoring=true \
+    setupwizard.feature.notification_refactoring=true \
+    setupwizard.feature.portal_notification=true \
+    setupwizard.feature.show_pai_screen_in_main_flow.carrier1839=false \
+    setupwizard.feature.show_pixel_tos=true \
+    setupwizard.feature.show_support_link_in_deferred_setup=false \
+    setupwizard.feature.skip_button_use_mobile_data.carrier1839=true \
+    setupwizard.theme=glif_v3_light \
+    setupwizard.feature.enable_wifi_tracker=true
+
+# Speed profile services and wifi-service to reduce RAM and storage
+PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := speed-profile
+PRODUCT_USE_PROFILE_FOR_BOOT_IMAGE := true
+PRODUCT_DEX_PREOPT_BOOT_IMAGE_PROFILE_LOCATION := frameworks/base/config/boot-image-profile.txt
