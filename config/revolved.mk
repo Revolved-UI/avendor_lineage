@@ -1,3 +1,6 @@
+# Audio
+include vendor/lineage/audio/audio.mk
+
 # Additional props
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.error.receiver.system.apps=com.google.android.gms \
